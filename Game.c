@@ -4,9 +4,9 @@
 #include <Windows.h>
 
 #define TITLE " Conway's Game of Life"
-#define COMMANDS " Q - Quit | R - Read File | Enter - Step | Spacebar - Pause / Resume"
-#define LIVE_CELL 219
-#define DEAD_CELL 176
+#define COMMANDS " Q - Quit | R - Read File | S - Step"
+#define LIVE_CELL 'A'
+#define DEAD_CELL '*'
 #define BOX_BOTTOM_LEFT 200
 #define BOX_BOTTOM_RIGHT 188
 #define BOX_TOP_LEFT 201
@@ -19,6 +19,7 @@
 #define WIDTH 75
 #define HEIGHT 20
 #define STEP_DELAY_MILLISECONDS 500
+#define BUFFER 80
 
 void print_top_line(void)
 {
@@ -185,8 +186,60 @@ void clear_screen(void)
 	system("cls");
 }
 
+void read_grid_from_file(bool grid[][HEIGHT])
+{
+	char current_line[WIDTH + 3]; // 3: null-terminating + newline characters
+	bool current_cell = false;
+
+	char file_name[BUFFER];
+	FILE* input_file;
+	char current;
+	int scans;
+	int x;
+	int y;
+
+	printf("Enter input file name: ");
+
+	do {
+		scans = scanf("%s", file_name);
+	} while (scans != 1);
+
+	input_file = fopen(file_name, "r");
+
+	if (input_file == NULL)
+	{
+		return;
+	}
+
+	for (y = 0; y < HEIGHT; y++)
+	{
+		fscanf(input_file, "%s", current_line);
+
+		for (x = 0; x < WIDTH; x++)
+		{
+			current = current_line[x];
+
+			switch (current)
+			{
+			case LIVE_CELL:
+				current_cell = true;
+				break;
+			default:
+			case DEAD_CELL:
+				current_cell = false;
+				break;
+			}
+
+			grid[x][y] = current_cell;
+		}
+	}
+
+	fclose(input_file);
+}
+
 int main(void)
 {
+	char command;
 	bool grid[WIDTH][HEIGHT];
 	int x;
 	int y;
@@ -196,21 +249,6 @@ int main(void)
 		for (y = 0; y < HEIGHT; y++)
 		{
 			grid[x][y] = false;
-
-			if (x < 3 && y == 2)
-			{
-				grid[x][y] = true;
-			}
-
-			if (x == 1 && y == 0)
-			{
-				grid[x][y] = true;
-			}
-
-			if (x == 2 && y == 1)
-			{
-				grid[x][y] = true;
-			}
 		}
 	}
 
@@ -219,9 +257,22 @@ int main(void)
 		clear_screen();
 		print_screen(grid);
 		simulate_step(grid);
-		Sleep(STEP_DELAY_MILLISECONDS);
-	}
 
-	getch();
-	return EXIT_SUCCESS;
+		// Decipher next command
+		do {
+			command = getch();
+			tolower(command);
+
+			switch (command)
+			{
+			case 'q':
+				return EXIT_SUCCESS;
+			case 'r':
+				read_grid_from_file(grid);
+				clear_screen();
+				print_screen(grid);
+				break;
+			}
+		} while (command != 's');
+	}
 }
