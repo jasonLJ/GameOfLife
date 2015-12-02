@@ -198,6 +198,7 @@ void read_grid_from_file(bool grid[][HEIGHT])
 	int x;
 	int y;
 
+	// Prompt for user input
 	printf("Enter input file name: ");
 
 	do {
@@ -208,6 +209,7 @@ void read_grid_from_file(bool grid[][HEIGHT])
 
 	if (input_file == NULL)
 	{
+		printf("Could not open '%s', aborting.\n", file_name);
 		return;
 	}
 
@@ -268,8 +270,8 @@ int main(void)
 			case 'q':
 				return EXIT_SUCCESS;
 			case 'r':
-				read_grid_from_file(grid);
 				clear_screen();
+				read_grid_from_file(grid);
 				print_screen(grid);
 				break;
 			}
