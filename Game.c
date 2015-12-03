@@ -5,8 +5,8 @@
 
 #define TITLE " Conway's Game of Life"
 #define COMMANDS " Q - Quit | R - Read File | S - Step"
-#define LIVE_CELL 'O'
-#define DEAD_CELL '*'
+#define LIVE_CELL '*'
+#define DEAD_CELL '_'
 #define BOX_BOTTOM_LEFT 200
 #define BOX_BOTTOM_RIGHT 188
 #define BOX_TOP_LEFT 201
