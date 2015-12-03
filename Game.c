@@ -5,7 +5,7 @@
 
 #define TITLE " Conway's Game of Life"
 #define COMMANDS " Q - Quit | R - Read File | S - Step"
-#define LIVE_CELL 'A'
+#define LIVE_CELL 'O'
 #define DEAD_CELL '*'
 #define BOX_BOTTOM_LEFT 200
 #define BOX_BOTTOM_RIGHT 188
@@ -188,12 +188,11 @@ void clear_screen(void)
 
 void read_grid_from_file(bool grid[][HEIGHT])
 {
-	char current_line[WIDTH + 3]; // 3: null-terminating + newline characters
 	bool current_cell = false;
-
-	char file_name[BUFFER];
 	FILE* input_file;
-	char current;
+	char current_line[WIDTH + 3]; // 3: null-terminating + newline characters
+	char file_name[BUFFER];
+	char current_char;
 	int scans;
 	int x;
 	int y;
@@ -219,9 +218,9 @@ void read_grid_from_file(bool grid[][HEIGHT])
 
 		for (x = 0; x < WIDTH; x++)
 		{
-			current = current_line[x];
+			current_char = current_line[x];
 
-			switch (current)
+			switch (current_char)
 			{
 			case LIVE_CELL:
 				current_cell = true;
@@ -241,10 +240,10 @@ void read_grid_from_file(bool grid[][HEIGHT])
 
 int main(void)
 {
-	char command;
 	bool grid[WIDTH][HEIGHT];
 	int x;
 	int y;
+	char command;
 	
 	for (x = 0; x < WIDTH; x++)
 	{
